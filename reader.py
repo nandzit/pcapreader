@@ -3,6 +3,8 @@
 #------------------------------------------------------------------------# 
 
 from pcap import * 
+from pretty_formatter import *
+import pdb 
 
 little = 'd4c3b2a1'
 big = 'a1b2c3d4'
@@ -20,7 +22,7 @@ def readPCAP(filename):
             #Get frames from the pcap File
             frames = getFrames(pcap)
         
-            for frame in frames:
+            for index, frame in enumerate(frames):
                 
                 #----------------------------------Header-------------------------------------------#
                 
@@ -47,7 +49,6 @@ def readPCAP(filename):
 
                 # Type == "0x0806" is ARP Protocol  |  Dest Range in Frame -> [38:42] | Source Range in Frame -> [28:32] 
                 # Type == "0x0800" is IPV4 Protocol |  Dest Range in Frame -> [30:34] | Source Range in Frame -> [26:30]
-                
                 #Get the Range from IP
                 destIpRange   = frame[38:42] if ethernetType == '0x0806' else frame[30:34]
                 sourceIpRange = frame[28:32] if ethernetType == '0x0806' else frame[26:30]
@@ -60,6 +61,9 @@ def readPCAP(filename):
                 layer_two   = {'destMac': destMac, 'sourceMac': sourceMac, 'ethernetType': ethernetType }
                 layer_three = {'destIp': ipDestAddress, 'sourceIp': ipSourceAddress }
                 layer_four  = {'protocol': protocol}
+                
+                #Compose Table and Print
+                createTable(layer_two, layer_three, layer_four, index) 
                 
     except: 
           print("Sorry! Something went wrong, you are invited to try again\n\nEnsure the file exits")
