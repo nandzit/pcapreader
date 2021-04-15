@@ -8,7 +8,7 @@ Read frames from PCAP Files
 
 `python3 -m venv wireshark`
 
-*** Note: *** if you don't have venv you can install like this: 
+***Note:*** if you don't have venv you can install like this: 
 
 `python3 -m pip install --user virtualenv`
 
