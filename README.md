@@ -4,7 +4,7 @@ Read frames from PCAP Files
 
 ***How to use:***
 
-> Create an enviroment
+> Create an enviroment inside the folder
 
 `python3 -m wireshark`
 
