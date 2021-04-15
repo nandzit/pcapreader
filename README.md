@@ -6,9 +6,13 @@ Read frames from PCAP Files
 
 > Create an enviroment inside the folder
 
-`python3 -m wireshark`
+`python3 -m venv wireshark`
 
-> Intall the dependencies
+*** Note: *** if you don't have venv you can install like this: 
+
+`python3 -m pip install --user virtualenv`
+
+> Intall the dependencies inside the virtual env
 
 `pip install rich`
 
