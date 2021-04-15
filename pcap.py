@@ -18,20 +18,20 @@ frames = []
 
 #Recursively individualize each packet
 
-def getFrames(data):
+def getFrames(data, isLittle=False):
     try:
         #GET lenght of frame and indivilualize the frame
         data.seek(lenghtOffSet,1)#.read(4) 
-        lenght = int.from_bytes(data.read(4), "little")
+        lenght = int.from_bytes(data.read(4), "little" if isLittle else "big" )
         #Read frame using the lenght
         frame = data.read(lenght)
         #Check if frame is empty, in this case break the recursion
         if frame == b'':
-            return frames
-        #Append to Array and keep buffer    
-        frames.append(frame)
+            return frames 
+        #Append to Aray and keep buffer    
+        frames.append({'lenght': lenght, 'data': frame})
         #Call recursion 
-        return getFrames(data) 
+        return getFrames(data, isLittle) 
     except:
         return frames
         #Except is caught only if EOF arrived
@@ -41,7 +41,7 @@ def getFrames(data):
 #The below function is used to extract [Destination and Source] Mac Address
 #It assumes you call it with the right amount of bytes to compose the Mac Address
 
-def extractMac(data, isLittle=False):
+def extractMac(data):
         #Identity the OUI(Organizationally Unique Identifier) 
         OUI = [format(x, '02x') for x in bytearray(data[:3])]
         

@@ -8,7 +8,7 @@ import pdb
 
 console = Console()
 
-def createTable(layer_two, layer_three, layer_four, packet):
+def createTable(layer_two, layer_three, layer_four, packet, debug):
     sourceMac       = layer_two['sourceMac']
     destMac          = layer_two['destMac']
     ethernetType     = layer_two['ethernetType']
@@ -19,13 +19,17 @@ def createTable(layer_two, layer_three, layer_four, packet):
     print(Panel.fit("Packet [red]{}".format(packet)))
 
     table = Table(show_header=True, header_style="bold white", box=box.MINIMAL)
-    table.add_column("Identifier", style="green", width=28)
-    table.add_column("Value",  style="dim", width=28)
+    table.add_column("Identifier", style="green", width=20)
+    table.add_column("Value",  style="dim", width=20)
 
     table.add_row('Destination Mac Address', destMac)
     table.add_row("Source Mac Address", sourceMac)
     table.add_row('Ethernet Type', ethernetType)
     table.add_row('Destination IP Address', destIp)
     table.add_row('Source IP Address', sourceIp)
-
+    if protocol is not None:
+        table.add_row('Protocol', str(protocol))
     console.print(table)
+
+    if debug is not None: 
+        print(Panel.fit(debug))

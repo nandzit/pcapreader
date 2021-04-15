@@ -5,6 +5,9 @@
 from pcap import * 
 from pretty_formatter import *
 import pdb 
+import binascii
+import sys, time
+import os
 
 little = 'd4c3b2a1'
 big = 'a1b2c3d4'
@@ -12,7 +15,6 @@ big = 'a1b2c3d4'
 isLittle = False
 
 def readPCAP(filename):
-    try:
          with open(filename + ".pcap", 'r+b') as pcap:
             pcap.seek(0,0)
             #Solve the Magic Number
@@ -20,9 +22,10 @@ def readPCAP(filename):
             #Offset the header [we are not using this data in this exercise]
             pcap.seek(24,0) 
             #Get frames from the pcap File
-            frames = getFrames(pcap)
-        
-            for index, frame in enumerate(frames):
+            listOfFrames = getFrames(pcap, isLittle)
+            for index, dic in enumerate(listOfFrames):
+                #Take the frame data from
+                frame = dic['data']
                 
                 #----------------------------------Header-------------------------------------------#
                 
@@ -61,13 +64,23 @@ def readPCAP(filename):
                 layer_two   = {'destMac': destMac, 'sourceMac': sourceMac, 'ethernetType': ethernetType }
                 layer_three = {'destIp': ipDestAddress, 'sourceIp': ipSourceAddress }
                 layer_four  = {'protocol': protocol}
-                
-                #Compose Table and Print
-                createTable(layer_two, layer_three, layer_four, index) 
-                
-    except: 
-          print("Sorry! Something went wrong, you are invited to try again\n\nEnsure the file exits")
+                debug = ""
+                debug += "Saved Packet Lenght: [bold magenta] {} [/bold magenta]\n".format(dic['lenght'])
+                debug += "Actual Packet Lenght:[bold magenta] {} [/bold magenta]\n\n".format(dic['lenght'])        
 
+                for i, x in enumerate(frame, start=1):
+                    if i % 16 == 0:
+                       debug += '\n' 
+                    else:
+                       debug += '{:02x} '.format(x)
+
+                #Compose Table and Print
+                createTable(layer_two, layer_three, layer_four, index, debug) 
+                sys.stdin.readline()
+            else:
+                print("End of file")
+                #TODO: GET ARRAY SIZE OF PCAP
+                sys.exit() 
 
 while True:
    i = input("Input file name or Q to Quit: ")
